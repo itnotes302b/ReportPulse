@@ -76,6 +76,7 @@ styl = f"""
 st.markdown(styl, unsafe_allow_html=True)
 
 if file_uploaded is not None:
+    
     def display_messages():
         
         for i, (msg, is_user) in enumerate(st.session_state["messages"]):
@@ -86,7 +87,7 @@ if file_uploaded is not None:
     def process_input():
         if st.session_state["user_input"] and len(st.session_state["user_input"].strip()) > 0:
             user_text = st.session_state["user_input"].strip()
-            with st.session_state["thinking_spinner"], st.spinner(f"Thinking"):
+            with st.session_state["thinking_spinner"], st.spinner(transl[lang]["thinking"]):
                 agent_text = generate_response(user_text)
 
             st.session_state["messages"].append((user_text, True))
@@ -109,13 +110,12 @@ if file_uploaded is not None:
         with open(save_path, mode='wb') as w:
             w.write(uploadedFile.getvalue())
 
-        if save_path.exists():
-            st.success(f'File {uploadedFile.name} is successfully saved!')
+        with st.spinner(transl[lang]["scan"]):
+            return ReportPulseAssistent(save_folder)
         
-        return ReportPulseAssistent(save_folder)
-        
-    reportPulseAgent = upload_file(file_uploaded)    
-    r_response = reportPulseAgent.get_next_message(lang=lang)
+    reportPulseAgent = upload_file(file_uploaded)
+    with st.spinner(transl[lang]["gen_summary"]):    
+        r_response = reportPulseAgent.get_next_message(lang=lang)
     st.sidebar.markdown(r_response)
     st.markdown("""---""")
     st.sidebar.markdown(""" <br /><br />
