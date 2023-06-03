@@ -23,6 +23,29 @@ for k, v in st.session_state.items():
 
 os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
 
+
+st.title('Report pulse ChatBot')
+
+file_uploaded = st.file_uploader(label="Upload your report here")
+
+styl = f"""
+<style>
+    .stTextInput {{
+      position: fixed;
+      bottom: 3rem;
+      z-index: 2;
+    }}
+    #root > div:nth-child(1) > div.withScreencast > div > div > div > section > div.block-container.css-1y4p8pa {{
+        display: flex !important;
+        float:left;
+        overflow-y: auto;
+        flex-direction: column-reverse;
+    }}
+</style>
+"""
+st.markdown(styl, unsafe_allow_html=True)
+
+
 # Add the language selection dropdown    
 if 'lang_tmp' not in st.session_state:
     st.session_state['lang_tmp'] = 'English'
@@ -61,10 +84,10 @@ if file_uploaded is not None:
     def display_messages():
         
         for i, (msg, is_user) in enumerate(st.session_state["messages"]):
-            message(msg, is_user=is_user, key=str(i))
+            #message( msg, is_user=is_user, key=str(i), allow_html = True )
+            message( msg, is_user=is_user, key=str(i), allow_html = True )
         st.session_state["thinking_spinner"] = st.empty()
     
-
     def process_input():
         if st.session_state["user_input"] and len(st.session_state["user_input"].strip()) > 0:
             user_text = st.session_state["user_input"].strip()
@@ -73,7 +96,7 @@ if file_uploaded is not None:
 
             st.session_state["messages"].append((user_text, True))
             st.session_state["messages"].append((agent_text, False))
-        
+            
     # Storing the chat
     if 'messages' not in st.session_state:
         st.session_state['messages'] = []
@@ -105,5 +128,6 @@ if file_uploaded is not None:
         return response.response
 
     # We will get the user's input by calling the get_text function
+
     st.text_input(transl[lang]['ask_question'],key="user_input", on_change=process_input)
     display_messages()
