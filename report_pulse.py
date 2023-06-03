@@ -23,11 +23,6 @@ for k, v in st.session_state.items():
 
 os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
 
-
-st.title('Report pulse ChatBot')
-
-file_uploaded = st.file_uploader(label="Upload your report here")
-
 styl = f"""
 <style>
     .stTextInput {{
@@ -85,7 +80,7 @@ if file_uploaded is not None:
         
         for i, (msg, is_user) in enumerate(st.session_state["messages"]):
             #message( msg, is_user=is_user, key=str(i), allow_html = True )
-            message( msg, is_user=is_user, key=str(i), allow_html = True )
+            message( msg, is_user=is_user, key=str(i) )
         st.session_state["thinking_spinner"] = st.empty()
     
     def process_input():
@@ -96,6 +91,7 @@ if file_uploaded is not None:
 
             st.session_state["messages"].append((user_text, True))
             st.session_state["messages"].append((agent_text, False))
+            st.session_state["user_input"] = ""
             
     # Storing the chat
     if 'messages' not in st.session_state:
@@ -119,13 +115,19 @@ if file_uploaded is not None:
         return ReportPulseAssistent(save_folder)
         
     reportPulseAgent = upload_file(file_uploaded)    
-    r_response = reportPulseAgent.get_next_message().response
+    r_response = reportPulseAgent.get_next_message(lang=lang)
     st.sidebar.markdown(r_response)
-    
+    st.markdown("""---""")
+    st.sidebar.markdown(""" <br /><br />
+                      :rotating_light: **{}** :rotating_light: <br />
+                            {}
+                            """.format(transl[lang]['caution'], transl[lang]['caution_message']), 
+                            unsafe_allow_html=True
+    )
 
     def generate_response(user_query):
-        response = reportPulseAgent.get_next_message(user_query)
-        return response.response
+        response = reportPulseAgent.get_next_message(user_query, lang=lang)
+        return response
 
     # We will get the user's input by calling the get_text function
 

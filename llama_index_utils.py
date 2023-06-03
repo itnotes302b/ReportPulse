@@ -6,6 +6,12 @@ from tenacity import (
     wait_random_exponential,
 )
 from prompts import SUMMARY_PROMPT
+import redis
+import hashlib
+from llama_index import StorageContext, load_index_from_storage
+
+# Connect to Redis
+r = redis.Redis(host='localhost', port=6379, db=0)
 
 class ReportPulseAssistent:
 
@@ -24,12 +30,31 @@ class ReportPulseAssistent:
 
     @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(3))
     def get_index(self, documents):
-        index = GPTVectorStoreIndex.from_documents(documents)
+
+        # rebuild storage context
+        try:
+            storage_context = StorageContext.from_defaults(persist_dir='./storage')
+            index = load_index_from_storage(storage_context)
+        except Exception as e:
+            index = GPTVectorStoreIndex.from_documents(documents)
+            index.storage_context.persist()
+        
         return index
 
-    def get_next_message(self, prompt=SUMMARY_PROMPT):
-        response = self.chat_engine.chat(prompt)
-        return response
+    def get_next_message(self, prompt=SUMMARY_PROMPT, lang="ENGLISH"):
+
+        input = f"{prompt}. Return the result in {lang} language."
+
+        md5_hash = hashlib.md5(input.encode()).hexdigest()
+
+        if r.exists(md5_hash):
+            response = r.get(md5_hash).decode('utf-8')
+            return response
+        else:
+            response = self.chat_engine.chat(input)
+            r.set(md5_hash, response.response)
+             
+        return response.response
 
 
     
