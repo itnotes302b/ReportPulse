@@ -16,6 +16,10 @@ COPY . .
 
 RUN pip3 install -r requirements.txt
 
+#RUN mkdir /app/.streamlit/
+
+#COPY .streamlit/secrets.toml /app/.streamlit/secrets.toml
+
 EXPOSE 8501
 
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
