@@ -1,8 +1,14 @@
 {
     "English": {
-        "language_selection": "Select a language: "
+        "language_selection": "Select a language: ",
+        "title":"Report pulse -ChatBot",
+        "upload": "Upload your report here",
+        "ask_question": "Ask Question From your report ?"
     },
     "Hindi": {
-        "language_selection": "Select a language: "
+        "language_selection": "भाषा चुनें: ",
+        "title":"रिपोर्ट पल्स -चैटबॉट",
+        "upload": "अपनी रिपोर्ट यहां अपलोड करें",
+        "ask_question": "अपनी रिपोर्ट से प्रश्न पूछें?"
     }
 }
