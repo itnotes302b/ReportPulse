@@ -1,0 +1,9 @@
+altair
+pandas
+streamlit
+# ml model dependencies
+openai
+sklearn
+pandas
+joblib
+redis
