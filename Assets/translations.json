@@ -8,6 +8,7 @@
         "caution_message": "The AI-generated medical reports provided here are for informational purposes only. Consult a healthcare professional for accurate diagnosis and advice.",
         "scan": "Scanning Report",
         "gen_summary": "Generating Summary",
+        "gen_report": "Generating Report",
         "thinking" : "Thinking"
     },
     "Hindi": {
@@ -19,6 +20,7 @@
         "caution_message": "यहां प्रदान की गई एआई-जेनरेट की गई मेडिकल रिपोर्ट केवल सूचनात्मक उद्देश्यों के लिए हैं। सटीक निदान और सलाह के लिए एक स्वास्थ्य देखभाल पेशेवर से परामर्श करें।",
         "scan": "रिपोर्ट स्कैन कर रहा है",
         "gen_summary": "सारांश उपार्जन कर रहा है",
+        "gen_report": "जनरेटिंग रिपोर्ट",
         "thinking" : "सोच रहा है"
     }
 }
