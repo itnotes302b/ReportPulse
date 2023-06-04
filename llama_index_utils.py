@@ -83,7 +83,8 @@ class ReportPulseAssistent:
 
     def get_next_message(self, prompt=SUMMARY_PROMPT, lang="ENGLISH", prompt_type='summary', use_openai=True):
 
-        md5_hash = hashlib.md5(prompt.encode()).hexdigest()
+        prompt_enc = prompt + self.lang 
+        md5_hash = hashlib.md5(prompt_enc.encode()).hexdigest()
 
         if r.exists(md5_hash):
             response = r.get(md5_hash).decode('utf-8')
@@ -95,7 +96,8 @@ class ReportPulseAssistent:
                     self.msgContext.extend([
                         {'role':'assistant', 'content': response}    
                     ])
-                    r.set(md5_hash, response)
+                    r_res = response.encode('utf-8')
+                    r.set(md5_hash, r_res)
                     return response
                 elif prompt_type == 'report':
                     user_prompt = f"""
@@ -116,7 +118,8 @@ class ReportPulseAssistent:
                     self.msgContext.extend([
                         {'role':'assistant', 'content': response}    
                     ])
-                    r.set(md5_hash, response)
+                    r_res = response.encode('utf-8')
+                    r.set(md5_hash, r_res)
                     return response
                 else:
                     if self.lang != "ENGLISH":
@@ -128,7 +131,8 @@ class ReportPulseAssistent:
                     self.msgContext.extend([
                         {'role':'assistant', 'content': response}    
                     ])
-                    r.set(md5_hash, response)
+                    r_res = response.encode('utf-8')
+                    r.set(md5_hash, r_res)
                     return response
 
 

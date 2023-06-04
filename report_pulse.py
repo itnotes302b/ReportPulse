@@ -59,6 +59,7 @@ else:
 if lang != st.session_state['lang_tmp']:
     st.session_state['lang_tmp'] = lang
     st.session_state['lang_changed'] = True
+    st.experimental_rerun()
 else:
     st.session_state['lang_changed'] = False
 
@@ -165,6 +166,7 @@ if file_uploaded is not None:
     reportPulseAgent = upload_file(file_uploaded)
     with st.spinner(transl[lang]["gen_summary"]):    
         r_response = reportPulseAgent.get_next_message(lang=lang,prompt_type='summary')
+    
     st.sidebar.markdown(r_response)
     st.markdown("""---""")
     st.sidebar.markdown(""" <br /><br />
@@ -174,11 +176,14 @@ if file_uploaded is not None:
                             unsafe_allow_html=True
     )
     with st.spinner(transl[lang]["gen_report"]): 
-        reports_response = reportPulseAgent.get_next_message(REPORT_PROMPT,lang=lang,prompt_type='report')
-        #st.success(json.dumps(reports_response))
-        reports = json.loads(reports_response)
-        #st.success(json.dumps(reports))
-        st.sidebar.markdown(get_st_col_metric(reports))
+        try:
+            reports_response = reportPulseAgent.get_next_message(REPORT_PROMPT,lang=lang,prompt_type='report')
+            #st.success(json.dumps(reports_response))
+            reports = json.loads(reports_response)
+            #st.success(json.dumps(reports))
+            st.sidebar.markdown(get_st_col_metric(reports))
+        except Exception as e:
+            pass
 
     def generate_response(user_query):
         response = reportPulseAgent.get_next_message(user_query, lang=lang,prompt_type='other')
