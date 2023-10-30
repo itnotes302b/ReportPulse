@@ -154,7 +154,7 @@ if file_uploaded is not None:
     def upload_file(uploadedFile):
         
         # Save uploaded file to 'content' folder.
-        save_folder = '/app/reportsData/'
+        save_folder = 'reportsData/'
         save_path = Path(save_folder, uploadedFile.name)
         
         with open(save_path, mode='wb') as w:
